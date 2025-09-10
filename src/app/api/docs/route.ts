@@ -10,7 +10,7 @@ export const GET = ApiReference({
           summary: "Health",
           responses: {
             "200": {
-              description: "Successful request",
+              description: "Success",
               content: {
                 "application/json": {
                   examples: {
@@ -22,14 +22,14 @@ export const GET = ApiReference({
               },
             },
             "404": {
-              description: "Not Found / Error occurred",
+              description: "Error",
               content: {
                 "application/json": {
                   examples: {
-                    errorWithMessage: {
+                    error: {
                       value: { message: "Some error message" },
                     },
-                    genericError: {
+                    fallback: {
                       value: { message: "404" },
                     },
                   },
