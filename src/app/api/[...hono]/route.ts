@@ -1,13 +1,16 @@
 import { Scalar } from "@scalar/hono-api-reference"
 import { Hono } from "hono"
 import { handle } from "hono/vercel"
+import { z } from "zod"
 
 import { auth } from "@/lib/auth"
 
 const app = new Hono().basePath("/api")
 
-app.on(["GET", "POST"], "/auth/**", (c) => auth.handler(c.req.raw))
+app.on(["GET", "POST"], "/auth/*", (c) => auth.handler(c.req.raw))
+
 app.get("/health", (c) => c.json({ message: "OK" }))
+
 app.get(
   "/docs",
   Scalar(() => {
@@ -47,6 +50,17 @@ app.get(
     }
   }),
 )
+
+app.notFound((c) => c.json({ message: "Not Found" }, 404))
+
+app.onError((error, c) => {
+  console.error(error)
+  if (error instanceof z.ZodError) {
+    return c.json({ message: "ZodError", errors: JSON.parse(error.message) }, 400)
+  }
+  if (error instanceof Error) return c.json({ message: error.message }, 500)
+  return c.json({ message: "I'm a teapot" }, 418)
+})
 
 export const GET = handle(app)
 export const POST = handle(app)
