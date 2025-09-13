@@ -66,7 +66,6 @@ app.get(
               },
             },
           },
-
           "/api/auth/get-session": {
             get: {
               summary: "Get session",
