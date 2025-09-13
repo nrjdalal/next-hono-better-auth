@@ -7,9 +7,9 @@ import { auth } from "@/lib/auth"
 
 const app = new Hono().basePath("/api")
 
-app.on(["GET", "POST"], "/auth/*", (c) => auth.handler(c.req.raw))
-
 app.get("/health", (c) => c.json({ message: "OK" }))
+
+app.on(["GET", "POST"], "/auth/*", (c) => auth.handler(c.req.raw))
 
 app.get(
   "/docs",
